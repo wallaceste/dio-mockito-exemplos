@@ -1,5 +1,6 @@
 package dio.mockito.exemplos;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -8,6 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
 
 import java.time.LocalDate;
 
@@ -19,6 +21,15 @@ public class CadastrarPessoaTest {
 
     @InjectMocks
     private CadastrarPessoa cadastrarPessoa;
+
+    @Test
+    void lancarExcecaoQuandoChamarApiDosCorreios() {
+        Mockito.when(apiDosCorreios.buscaDadosComBaseNoCep(anyString())).thenThrow(IllegalArgumentException.class);
+
+        Assertions.assertThrows(IllegalArgumentException.class , () ->
+                cadastrarPessoa.cadastrarPessoa("João", "98656554654654", LocalDate.of(2005, 1, 30), "24900120"));
+
+    }
 
     @Test
     void validarDadosDeCadastro() {
